@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <ui:composition template="../templates/template.xhtml">
+        <ui:define name="titleWindow">ScarGames - Usuários</ui:define>
+        <ui:define name="content">
+            <div class="ui-g">
+                <div class="ui-g-1"></div>
+                <div class="ui-g-10">
+                    <h1>Cadastro de Usuários</h1>
+                </div>
+                <div class="ui-g-1"></div>
+                
+                <div class="ui-g-1"></div>
+                <div class="ui-g-7">
+                    <p:inputText id="nome" placeholder="Nome"
+                                 value="#{usuarioMB.usuario.nome}"
+                                 style="width: 95%;"/>
+                </div>
+                <div class="ui-g-3">
+                    <p:calendar id="dataNascimento" value="#{usuarioMB.usuario.dataNascimento}" 
+                                placeholder="Nascimento" maxdate="today"/>
+                </div>
+                <div class="ui-g-1"></div>
+                
+                <div class="ui-g-1"></div>
+                <div class="ui-g-3">
+                    <p:inputMask id="cpf" value="#{usuarioMB.usuario.cpf}" placeholder="CPF"
+                                 mask="999.999.999.999-99" style="width: 95%;"/>
+                </div>
+                
+                <div class="ui-g-3">
+                    <p:inputMask id="telefone" value="#{usuarioMB.usuario.telefone}" placeholder="Telefone"
+                                 mask="(99)99999-9999" style="width: 95%;"/>
+                </div>
+                <div class="ui-g-3">
+                    <p:selectOneMenu id="sexo" value="#{usuarioMB.usuario.sexo}" style="width:125px"
+                                     placeholder="Sexo">
+                        <f:selectItem itemLabel="Masculino" itemValue="M"/>
+                        <f:selectItem itemLabel="Feminino" itemValue="F"/>
+                    </p:selectOneMenu>
+                </div>
+                <div class="ui-g-2"></div>
+                
+                <div class="ui-g-1"></div>
+                <div class="ui-g-5">
+                    <p:inputText id="email" placeholder="Email"
+                                 value="#{usuarioMB.usuario.email}"
+                                 style="width: 95%;"/>
+                </div>
+                <div class="ui-g-4">
+                    <p:password id="senha" placeholder="Senha" value="#{usuarioMB.usuario.senha}" feedback="true" inline="true" />
+                </div>
+                
+                <div class="ui-g-1">
+                    <p:commandLink action="#{enderecoMB.novo()}" onclick="PF('gestaoEndereco').show()" >
+                        <p:graphicImage url="/resources/img/add.png" 
+                                        height="40" width="40" title="Novo"
+                                        style="margin-top: 20px; float: right;"/>
+                    </p:commandLink>
+                </div>
+                <div class="ui-g-1"></div>
+                
+
+
+                <div class="ui-g-1"></div>
+                <div class="ui-g-10">
+                    <p:dataTable value="#{enderecoMB.enderecos}" var="enderecos"
+                                paginator="true" paginatorPosition="bottom" id="enderecos"
+                                rows="10" emptyMessage="Nenhum registro encontrado">
+                        <f:facet name="header">Endereços</f:facet>
+                        <f:facet name="footer">Total de Registros: #{enderecoMB.enderecos.size()}</f:facet>
+
+                        <p:column headerText="Logradouro" sortBy="#{endereco.logradouro}">
+                            <h:outputText value="#{endereco.logradouro}"/>
+                        </p:column>
+                        <p:column headerText="Número" sortBy="#{endereco.numero}">
+                            <h:outputText value="#{endereco.numero}"/>
+                        </p:column>
+                        <p:column headerText="Cidade" sortBy="#{endereco.cidade.nome}">
+                            <h:outputText value="#{endereco.cidade.nome}"/>
+                        </p:column>
+                        <p:column headerText="UF" sortBy="#{endereco.cidade.estado}">
+                            <h:outputText value="#{endereco.cidade.estado}"/>
+                        </p:column>
+
+                        <p:column headerText="Editar" width="70" style="text-align: center;">
+                            <p:commandButton icon="ui-icon-pencil" action="#{enderecoMB.carregarDados(endereco)}"/>
+                        </p:column>
+                        <p:column headerText="Excluir" width="70" style="text-align: center;">
+                            <p:commandButton icon="ui-icon-trash" action="#{enderecoMB.excluir(endereco)}"
+                                             onclick="if (!confirm('Confirma exclusão?'))return false"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+                <div class="ui-g-1"></div>
+                
+            </div>
+            
+            <div align="center" style="margin-top: 20px;">
+                <p:commandButton value="Salvar" icon="ui-icon-check"  
+                                 action="#{usuarioMB.inserir()}"
+                                 style="width: 150px; margin-right: 20px;"/>
+                <p:commandButton value="Cancelar" icon="ui-icon-close" 
+                                 action="#{usuarioMB.cancelar()}" 
+                                 immediate="true" style="width: 150px;"/>
+            </div>            
+            
+            
+            
+            <p:dialog id="dlgEndereco" closable="true" draggable="false" maximizable="true"
+                      minimizable="true" resizable="false" modal="true"
+                      header="ScarGames | Endereço" widgetVar="gestaoEndereco"
+                      width="800" height="500">
+                
+                <div class="ui-g-1"></div>
+                <div class="ui-g-4">  
+                    <p:inputText id="logradouro" placeholder="Logradouro"
+                                 value="#{enderecoMB.endereco.logradouro}"
+                                 style="width: 95%;"/>
+                </div>
+                <div class="ui-g-2">
+                    <p:inputText id="numero" placeholder="Número"
+                                 value="#{enderecoMB.endereco.numero}"
+                                 style="width: 95%;"/>
+                </div>
+                <div class="ui-g-4">
+                    <p:inputText id="complemento" placeholder="Complemento"
+                                 value="#{enderecoMB.endereco.complemento}"
+                                 style="width: 95%;"/>
+                </div>
+                <div class="ui-g-1"></div>
+                
+                <div class="ui-g-1"></div>
+                <div class="ui-g-3">
+                    <p:inputText id="bairro" placeholder="Bairro"
+                                 value="#{enderecoMB.endereco.bairro}"
+                                 style="width: 95%;"/>
+                </div>
+                <div class="ui-g-3">
+                    <p:inputText id="cep" placeholder="CEP"
+                                 value="#{enderecoMB.endereco.cep}"
+                                 style="width: 95%;"/>
+                </div>
+                <div class="ui-g-4">
+                    <p:selectOneMenu id="cidade" value="#{enderecoMB.endereco.cidade}" placeholder="Cidade" converter="entityConverter" style="width: 90%;">
+                        <f:selectItem itemLabel="Cidade" noSelectionOption="true"/>
+                        <f:selectItems value="#{cidadeMB.cidades}" var="cidade" itemLabel="#{cidade.nome}-#{cidade.estado}" itemValue="#{cidade}"/>
+                    </p:selectOneMenu>
+                </div>
+                <div class="ui-g-1"></div>
+                
+                <div align="center" style="margin-top: 20px;">
+                    <p:commandButton value="Salvar" icon="ui-icon-check"
+                                     action="#{enderecoMB.addArray(enderecoMB.endereco)}"
+                                     style="width: 150px; margin-right: 20px;"
+                                     update="growl, enderecos"/>
+                    <p:commandButton value="Cancelar" icon="ui-icon-close" 
+                                     onclick="PF('gestaoEndereco').hide()" 
+                                     immediate="true" style="width: 150px;"/>
+                </div>          
+            </p:dialog>
+            
+        </ui:define>
+    </ui:composition>
+</html>
+
